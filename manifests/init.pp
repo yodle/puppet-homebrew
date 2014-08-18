@@ -51,7 +51,7 @@ class homebrew (
   $xcode_cli_source  = undef,
   $xcode_cli_version = undef,
   $user              = root,
-  $group             = brew,
+  $group             = admin,
   $update_every      = 'default',
   $install_packages  = true
 )
