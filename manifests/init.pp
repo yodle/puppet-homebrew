@@ -137,9 +137,12 @@ class homebrew (
     require => File['/etc/profile.d'],
   }
 
+  # -m to stop tar erroring out if it can't modify the mtime for root owned directories
+  # pipefail to cause the exit status from curl to propogate if it fails
+  # we use -k for curl because Leopard has a bunch of bad SSL certificates
   exec {'install-homebrew':
     cwd       => '/usr/local',
-    command   => "/usr/bin/su ${homebrew::user} -c '/bin/bash -o pipefail -c \"/usr/bin/curl -skSfL https://github.com/mxcl/homebrew/tarball/master | /usr/bin/tar xz -m --strip 1\"'",
+    command   => "/usr/bin/su ${homebrew::user} -c '/bin/bash -o pipefail -c \"curl -ksSfL https://github.com/Homebrew/homebrew/tarball/master | tar xz -m --strip 1\"'",
     creates   => '/usr/local/bin/brew',
     logoutput => on_failure,
     timeout   => 0,
