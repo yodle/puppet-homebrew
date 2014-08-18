@@ -81,7 +81,7 @@ class homebrew (
     }
   }
 
-  $homebrew_directories = [ '/usr/local',
+  $homebrew_directories = [
                    '/usr/local/bin',
                    '/usr/local/etc',
                    '/usr/local/include',
@@ -122,6 +122,14 @@ class homebrew (
     require => Group[$group],
   }
 
+  file {'/usr/local':
+    ensure  => directory,
+    owner   => $homebrew::user,
+    group   => $homebrew::group,
+    mode    => '0775',
+    require => Group[$group],
+  }
+
   if (! defined(File['/etc/profile.d']))
   {
     file {'/etc/profile.d':
@@ -146,7 +154,7 @@ class homebrew (
     creates   => '/usr/local/bin/brew',
     logoutput => on_failure,
     timeout   => 0,
-    require   => File[$homebrew_directories],
+    notify    => File[$homebrew_directories]
   }
   if ($has_compiler != 'true' and $xcode_cli_source)
   {
